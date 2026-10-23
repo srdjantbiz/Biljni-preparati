@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>O meni - [NAZIV BRENDA]</title>
+  <meta name="description" content="Ko pravi biljne preparate [NAZIV BRENDA]: priča o bašti, porodičnom znanju i [X] godina rada sa biljem.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap&subset=latin-ext" rel="stylesheet">
+  <style>
+    /* =========================================================
+       DESIGN SISTEM - važi za sve stranice sajta
+       Boje: jedna akcentna (zelena žalfija) + neutralna paleta
+       Fontovi: Alegreya (naslovi), Source Sans 3 (tekst)
+       ========================================================= */
+    :root {
+      /* Boje */
+      --bg: #FAFAF7;            /* pozadina stranice */
+      --surface: #FFFFFF;       /* kartice, obrasci */
+      --text: #1E211D;          /* osnovni tekst, naslovi */
+      --muted: #575C55;         /* sporedni tekst */
+      --line: #E3E5DF;          /* linije 1px, ivice kartica */
+      --accent: #3E6A45;        /* JEDINA akcentna boja: dugmad, ikonice, linkovi */
+      --accent-hover: #335A3A;  /* hover za dugmad */
+      --accent-tint: #EDF2EC;   /* blaga podloga za istaknute sekcije */
+      --placeholder: #E7E8E3;   /* sivi blokovi za fotografije */
+      --dark: #1E211D;          /* podnožje */
+      --dark-text: #E9EAE6;
+      --dark-muted: #A9ADA6;
+
+      /* Tipografija */
+      --font-head: "Alegreya", Georgia, serif;
+      --font-body: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+      --fs-hero: 72px;
+      --fs-h2: 44px;
+      --fs-h3: 24px;
+      --fs-body: 18px;
+      --fs-small: 15px;
+      --fs-eyebrow: 14px;
+
+      /* Razmaci i oblici */
+      --container: 1100px;
+      --text-width: 65ch;
+      --section-y: 120px;
+      --gutter: 24px;
+      --radius-btn: 6px;
+      --radius-card: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.6;
+    }
+
+    img, svg { display: block; }
+
+    a { color: var(--accent); }
+    a:hover { color: var(--accent-hover); }
+
+    h1, h2, h3 {
+      font-family: var(--font-head);
+      font-weight: 600;
+      line-height: 1.1;
+      margin: 0;
+      color: var(--text);
+    }
+
+    h1 { font-size: var(--fs-hero); max-width: 15ch; letter-spacing: -0.01em; }
+    h2 { font-size: var(--fs-h2); max-width: 20ch; }
+    h3 { font-size: var(--fs-h3); line-height: 1.25; }
+
+    p { margin: 0 0 1em; max-width: var(--text-width); }
+    p:last-child { margin-bottom: 0; }
+
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    .section { padding: var(--section-y) 0; }
+    .section + .section { border-top: 1px solid var(--line); }
+    .section--tint { background: var(--accent-tint); border-top: 0 !important; }
+    .section--white { background: var(--surface); }
+
+    .eyebrow {
+      display: block;
+      font-size: var(--fs-eyebrow);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .lead { font-size: 21px; color: var(--muted); }
+    .muted { color: var(--muted); }
+    .small { font-size: var(--fs-small); }
+
+    /* Dugmad */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 14px 28px;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-btn);
+      background: var(--accent);
+      color: #FFFFFF;
+      font-family: var(--font-body);
+      font-size: 17px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #FFFFFF; }
+    .btn--outline { background: transparent; color: var(--accent); }
+    .btn--outline:hover { background: var(--accent-tint); color: var(--accent-hover); }
+    .btn--block { width: 100%; }
+    .btn:disabled { background: var(--placeholder); border-color: var(--placeholder); color: var(--muted); cursor: default; }
+
+    /* Placeholder fotografije */
+    .ph {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--placeholder);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 24px;
+      border-radius: var(--radius-card);
+    }
+
+    .icon { width: 28px; height: 28px; color: var(--accent); flex-shrink: 0; }
+
+    /* ---------- Zaglavlje ---------- */
+    .header { border-bottom: 1px solid var(--line); background: var(--bg); }
+    .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 76px; }
+    .logo { font-family: var(--font-head); font-size: 24px; font-weight: 700; color: var(--text); text-decoration: none; }
+    .nav { display: flex; gap: 28px; }
+    .nav a, .cart { color: var(--text); text-decoration: none; font-size: 16px; }
+    .nav a:hover, .cart:hover { color: var(--accent); }
+    .header__right { display: flex; align-items: center; gap: 20px; }
+    .cart { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+    .cart__count {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 24px; height: 24px; padding: 0 6px;
+      border-radius: 12px; background: var(--accent); color: #FFFFFF;
+      font-size: 13px; font-weight: 600;
+    }
+    .mobile-menu { display: none; position: relative; }
+    .mobile-menu summary {
+      list-style: none; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center;
+      padding: 0 14px; border: 1px solid var(--line); border-radius: var(--radius-btn); font-size: 16px;
+    }
+    .mobile-menu summary::-webkit-details-marker { display: none; }
+    .mobile-menu__list {
+      position: absolute; right: 0; top: 52px; z-index: 10; width: 220px;
+      display: flex; flex-direction: column; background: var(--surface);
+      border: 1px solid var(--line); border-radius: var(--radius-card); padding: 8px 0;
+    }
+    .mobile-menu__list a { padding: 12px 20px; color: var(--text); text-decoration: none; }
+
+    /* ---------- Hero ---------- */
+    .hero { padding: 120px 0 96px; }
+    .hero h1 { margin-bottom: 24px; }
+    .hero .lead { margin-bottom: 40px; max-width: 56ch; }
+    .hero__photo { margin-top: 80px; aspect-ratio: 21 / 9; }
+
+    /* ---------- Dvije kolone (naslov lijevo, tekst desno) ---------- */
+    .split { display: grid; grid-template-columns: 5fr 7fr; gap: 64px; align-items: start; }
+
+    /* ---------- Tri stuba ---------- */
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 72px; }
+    .pillar { border-top: 1px solid var(--line); padding-top: 28px; }
+    .pillar .icon { margin-bottom: 20px; }
+    .pillar h3 { margin-bottom: 10px; }
+    .pillar p { color: var(--muted); font-size: 17px; }
+
+    /* ---------- Kredibilitet ---------- */
+    .about { display: grid; grid-template-columns: 5fr 6fr; gap: 72px; align-items: center; }
+    .about__photo { aspect-ratio: 4 / 5; }
+    .about h2 { margin-bottom: 24px; }
+    .signature { font-family: var(--font-head); font-size: 22px; font-weight: 600; margin-top: 28px; }
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); margin-top: 40px; border-top: 1px solid var(--line); }
+    .stat { padding: 24px 24px 0 0; }
+    .stat + .stat { border-left: 1px solid var(--line); padding-left: 24px; }
+    .stat__num { font-family: var(--font-head); font-size: 40px; font-weight: 600; line-height: 1; color: var(--accent); }
+    .stat__label { font-size: var(--fs-small); color: var(--muted); margin-top: 8px; }
+
+    /* ---------- Benefiti ---------- */
+    .benefits { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 64px; }
+    .benefits li { display: flex; gap: 16px; align-items: flex-start; padding: 22px 0; border-top: 1px solid var(--line); }
+    .benefits .icon { width: 24px; height: 24px; margin-top: 3px; }
+
+    /* ---------- Dokazi ---------- */
+    .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+    .quote {
+      margin: 0; background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--radius-card); padding: 32px; display: flex; flex-direction: column; gap: 20px;
+    }
+    .quote blockquote { margin: 0; font-size: 17px; color: var(--muted); font-style: italic; flex-grow: 1; }
+    .quote figcaption { font-weight: 600; font-size: 16px; }
+    .quote figcaption span { display: block; font-weight: 400; color: var(--muted); font-size: var(--fs-small); }
+    .license {
+      display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: center;
+      margin-top: 40px; padding: 32px; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--surface);
+    }
+    .license__doc { aspect-ratio: 3 / 4; }
+    .license h3 { margin-bottom: 12px; }
+
+    /* ---------- Ponuda / proizvodi ---------- */
+    .offer__head { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; }
+    .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+    .product {
+      display: flex; flex-direction: column; background: var(--surface);
+      border: 1px solid var(--line); border-radius: var(--radius-card); overflow: hidden;
+    }
+    .product__photo { aspect-ratio: 1 / 1; border-radius: 0; border-bottom: 1px solid var(--line); }
+    .product__body { padding: 24px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+    .product__cat { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .product__desc { font-size: 16px; color: var(--muted); margin: 0; }
+    .product__meta { display: flex; justify-content: space-between; align-items: baseline; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); }
+    .product__price { font-family: var(--font-head); font-size: 24px; font-weight: 600; }
+    .product__size { font-size: var(--fs-small); color: var(--muted); }
+    .stock { display: flex; align-items: center; gap: 8px; font-size: var(--fs-small); color: var(--accent); font-weight: 600; }
+    .stock__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    .stock--out { color: var(--muted); }
+    .stock--out .stock__dot { background: var(--muted); }
+    .product .btn { margin-top: 12px; }
+    .offer__all { margin-top: 48px; text-align: center; }
+
+    /* ---------- Ograničenje ---------- */
+    .limit { display: grid; grid-template-columns: 5fr 7fr; gap: 64px; align-items: start; }
+
+    /* ---------- Narudžba ---------- */
+    .steps { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; counter-reset: step; }
+    .steps li { border-top: 1px solid var(--line); padding-top: 28px; }
+    .step__num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border: 1px solid var(--accent); border-radius: 50%;
+      color: var(--accent); font-family: var(--font-head); font-size: 20px; font-weight: 600; margin-bottom: 20px;
+    }
+    .steps h3 { margin-bottom: 10px; }
+    .steps p { color: var(--muted); font-size: 17px; }
+
+    .order { display: grid; grid-template-columns: 7fr 4fr; gap: 48px; margin-top: 80px; align-items: start; }
+    .form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 40px; }
+    .form h3 { margin-bottom: 8px; }
+    .form > p { color: var(--muted); font-size: 16px; margin-bottom: 28px; }
+    .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .field label { font-size: 15px; font-weight: 600; }
+    .field input, .field textarea {
+      font-family: var(--font-body); font-size: 17px; color: var(--text);
+      min-height: 50px; padding: 12px 14px; background: var(--bg);
+      border: 1px solid #C9CCC4; border-radius: var(--radius-btn);
+    }
+    .field textarea { min-height: 120px; resize: vertical; }
+    .field input:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form__note { display: flex; gap: 12px; margin-top: 16px; font-size: var(--fs-small); color: var(--muted); }
+    .form__note .icon { width: 20px; height: 20px; margin-top: 2px; }
+
+    .contact-box { border-top: 1px solid var(--line); padding-top: 28px; }
+    .contact-box h3 { margin-bottom: 12px; }
+    .contact-box p { color: var(--muted); font-size: 17px; }
+    .contact-line { display: flex; align-items: center; gap: 12px; margin-top: 16px; font-weight: 600; font-size: 18px; color: var(--text); text-decoration: none; min-height: 44px; }
+    .contact-line .icon { width: 22px; height: 22px; }
+
+    /* ---------- Upozorenje i P.S. ---------- */
+    .narrow { max-width: 720px; }
+    .narrow h2 { margin-bottom: 24px; }
+    .ps { padding: 96px 0; border-top: 1px solid var(--line); }
+    .ps p { font-size: 20px; }
+    .ps strong { font-family: var(--font-head); font-size: 22px; }
+    .ps .btn { margin-top: 24px; }
+
+    /* ---------- Podnožje ---------- */
+    .footer { background: var(--dark); color: var(--dark-text); padding: 80px 0 40px; }
+    .footer a { color: var(--dark-text); text-decoration: none; }
+    .footer a:hover { color: #FFFFFF; text-decoration: underline; }
+    .footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; }
+    .footer .logo { color: #FFFFFF; }
+    .footer p, .footer li { color: var(--dark-muted); font-size: 16px; }
+    .footer h3 { color: #FFFFFF; font-family: var(--font-body); font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+    .footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .footer__legal { margin-top: 64px; padding-top: 28px; border-top: 1px solid #3A3E38; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-size: 14px; color: var(--dark-muted); }
+    .footer__legal p { font-size: 14px; max-width: 70ch; }
+
+    /* ---------- Mobilni prelom ---------- */
+    @media (max-width: 768px) {
+      :root {
+        --fs-hero: 48px;
+        --fs-h2: 34px;
+        --fs-h3: 22px;
+        --fs-body: 16px;
+        --section-y: 72px;
+        --gutter: 20px;
+      }
+      .nav { display: none; }
+      .mobile-menu { display: block; }
+      .hero { padding: 64px 0 56px; }
+      .lead { font-size: 18px; }
+      .hero__photo { margin-top: 48px; aspect-ratio: 4 / 3; }
+      .split, .about, .limit, .order, .license, .footer__grid { grid-template-columns: 1fr; gap: 32px; }
+      .pillars, .benefits, .quotes, .products, .steps { grid-template-columns: 1fr; }
+      .pillars, .steps { gap: 32px; margin-top: 48px; }
+      .benefits { margin-top: 40px; }
+      .license__doc { max-width: 180px; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .form { padding: 24px; }
+      .order { margin-top: 56px; }
+      .ps { padding: 64px 0; }
+      .btn { width: 100%; }
+      .header .btn { width: auto; }
+    }
+
+    /* =========================================================
+       DODACI ZA STRANICU "O MENI"
+       ========================================================= */
+
+    .nav a[aria-current="page"],
+    .mobile-menu__list a[aria-current="page"] { color: var(--accent); font-weight: 600; }
+
+    /* Hero sa portretom */
+    .hero--split .container { display: grid; grid-template-columns: 7fr 5fr; gap: 64px; align-items: center; }
+    .hero--split h1 { max-width: 13ch; }
+    .hero__portrait { aspect-ratio: 4 / 5; }
+
+    /* Citat iz priče */
+    .pull {
+      font-family: var(--font-head); font-size: 32px; font-weight: 500; line-height: 1.3;
+      max-width: 28ch; margin: 0; color: var(--text);
+    }
+
+    /* Vremenska linija */
+    .timeline { list-style: none; margin: 56px 0 0; padding: 0; }
+    .timeline li { display: grid; grid-template-columns: 200px 1fr; gap: 40px; padding: 32px 0; border-top: 1px solid var(--line); }
+    .timeline li:last-child { border-bottom: 1px solid var(--line); }
+    .timeline__when { font-family: var(--font-head); font-size: 24px; font-weight: 600; color: var(--accent); line-height: 1.2; }
+    .timeline h3 { margin-bottom: 8px; }
+    .timeline p { color: var(--muted); }
+
+    /* Principi rada */
+    .principles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 64px; margin-top: 56px; }
+    .principle { display: flex; gap: 20px; padding: 28px 0; border-top: 1px solid var(--line); }
+    .principle h3 { margin-bottom: 8px; }
+    .principle p { color: var(--muted); font-size: 17px; }
+
+    /* Galerija */
+    .gallery { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-top: 56px; }
+    .gallery .ph { aspect-ratio: 1 / 1; }
+    .gallery .ph:first-child { aspect-ratio: auto; grid-row: span 2; }
+
+    .quotes--2 { grid-template-columns: repeat(2, 1fr); }
+    .cta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 40px; }
+
+    @media (max-width: 768px) {
+      .hero--split .container { grid-template-columns: 1fr; gap: 40px; }
+      .pull { font-size: 26px; }
+      .timeline li { grid-template-columns: 1fr; gap: 8px; padding: 24px 0; }
+      .principles, .quotes--2 { grid-template-columns: 1fr; }
+      .gallery { grid-template-columns: 1fr 1fr; }
+      .gallery .ph:first-child { grid-column: span 2; grid-row: auto; aspect-ratio: 4 / 3; }
+    }
+@media (max-width: 768px) { .split, .limit { gap: 24px; } }
+  
+/* Popravke za mobilni i polja obrasca */
+.field input, .field textarea, .field select { width: 100%; max-width: 100%; }
+@media (max-width: 768px) {
+  .header__inner, .header__right { gap: 12px; }
+  .logo { font-size: 20px; }
+  .cart > span:not(.cart__count) { display: none; }
+}
+</style>
+</head>
+<body>
+
+  <!-- ZAGLAVLJE -->
+  <header class="header">
+    <div class="container header__inner">
+      <a class="logo" href="index.html">[NAZIV BRENDA]</a>
+      <nav class="nav" aria-label="Glavni meni">
+        <a href="proizvodi.html">Proizvodi</a>
+        <a href="o-meni.html" aria-current="page">O meni</a>
+        <a href="basta-i-izrada.html">Bašta i izrada</a>
+        <a href="kontakt.html">Kontakt</a>
+      </nav>
+      <div class="header__right">
+        <a class="cart" href="korpa.html" aria-label="Korpa, 0 proizvoda">
+          <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9L5 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+          <span>Korpa</span>
+          <span class="cart__count">0</span>
+        </a>
+        <details class="mobile-menu">
+          <summary>Meni</summary>
+          <nav class="mobile-menu__list" aria-label="Meni za mobilni">
+            <a href="proizvodi.html">Proizvodi</a>
+            <a href="o-meni.html" aria-current="page">O meni</a>
+            <a href="basta-i-izrada.html">Bašta i izrada</a>
+            <a href="kontakt.html">Kontakt</a>
+          </nav>
+        </details>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- 1. NASLOV -->
+    <section class="hero hero--split">
+      <div class="container">
+        <div>
+          <span class="eyebrow">O meni</span>
+          <h1>Prve tegle nisam pravila za prodaju</h1>
+          <p class="lead">Pravila sam ih za svoju porodicu. Ovo je priča o tome kako su stigle do ljudi koje ne poznajem, i zašto ih i danas pravim isto kao prvi put.</p>
+          <a class="btn" href="#prica">Pročitajte kako je počelo</a>
+        </div>
+        <div class="ph hero__portrait">Portret: vlasnica u bašti</div>
+      </div>
+    </section>
+
+    <!-- 2. PROBLEM: ODAKLE JE SVE KRENULO -->
+    <section class="section" id="prica">
+      <div class="container split">
+        <h2>Htjela sam da znam šta je u tegli</h2>
+        <div>
+          <p>Prije [X] godina kupovala sam kreme, masti i biljne preparate kao i svi. Iz prodavnice, iz apoteke, sa pijace.</p>
+          <p>Na jednima je pisalo previše sastojaka. Na drugima nije pisalo ništa.</p>
+          <p>Kad nešto dajem svojim najbližima, htjela sam da znam svaku biljku u tome. Odakle je, kad su je ubrali i šta je još unutra.</p>
+          <p>Tako sam počela da ih pravim sama.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. ZNANJE -->
+    <section class="section section--white">
+      <div class="container about">
+        <div class="ph about__photo">Fotografija: [npr. stara bilježnica s receptima ili porodična fotografija]</div>
+        <div>
+          <span class="eyebrow">Odakle znanje</span>
+          <h2>Recepti koje sam naslijedila, pa provjerila</h2>
+          <p>[Od koga ste naučili: npr. „Prve recepte naučila sam od bake. Ona je bilje brala na istim livadama na kojima ga ja berem danas."]</p>
+          <p>[Šta ste dodali sami: npr. godine probanja, knjige, kursevi, savjeti farmaceuta ili travara.]</p>
+          <p>Recepti su stari. Ono što sam dodala je red: mjerim tačno, zapisujem svaku seriju i svaki proizvod šaljem u laboratoriju.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. KREDIBILITET: VREMENSKA LINIJA -->
+    <section class="section">
+      <div class="container">
+        <span class="eyebrow">[X] godina, korak po korak</span>
+        <h2>Od jedne tegle do licence</h2>
+        <ol class="timeline">
+          <li>
+            <span class="timeline__when">[GODINA]</span>
+            <div>
+              <h3>Za sebe i svoje ukućane</h3>
+              <p>Prvi preparati. Bašta je tada bila [VELIČINA ILI BROJ GREDICA].</p>
+            </div>
+          </li>
+          <li>
+            <span class="timeline__when">[GODINA]</span>
+            <div>
+              <h3>Rođaci i komšije</h3>
+              <p>Počeli su da pitaju za teglu na probu. Pa za još jednu.</p>
+            </div>
+          </li>
+          <li>
+            <span class="timeline__when">[GODINA]</span>
+            <div>
+              <h3>Prijatelji prijatelja</h3>
+              <p>Tegle su putovale dalje nego što sam mislila. Tada sam odlučila da radim kako treba.</p>
+            </div>
+          </li>
+          <li>
+            <span class="timeline__when">[GODINA]</span>
+            <div>
+              <h3>Testiranje i licenca</h3>
+              <p>Proizvode je testirala [NAZIV LABORATORIJE], a licencu broj [BROJ LICENCE] izdala je [NAZIV INSTITUCIJE].</p>
+            </div>
+          </li>
+          <li>
+            <span class="timeline__when">Danas</span>
+            <div>
+              <h3>I za Vas</h3>
+              <p>Ista bašta, isti recepti, iste ruke. Samo sada tegle stižu i ljudima koje ne poznajem lično.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 5. KAKO RADIM -->
+    <section class="section section--white">
+      <div class="container">
+        <h2>Četiri pravila koja ne mijenjam</h2>
+        <div class="principles">
+          <div class="principle">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"></path><path d="M5 19l7-7"></path></svg>
+            <div>
+              <h3>Biljke uzgajam ili berem sama</h3>
+              <p>Sve što može da raste u bašti, sadim u bašti. Divlje biljke berem u prirodi, sama.</p>
+            </div>
+          </div>
+          <div class="principle">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v4a5 5 0 0 1-10 0V4z"></path><path d="M7 20h10v-4a5 5 0 0 0-10 0v4z"></path></svg>
+            <div>
+              <h3>Ne pravim više nego što bašta da</h3>
+              <p>Svaku seriju pravim od jedne berbe. Kad je prodam, sljedeću pravim tek od nove berbe.</p>
+            </div>
+          </div>
+          <div class="principle">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5"></rect><path d="M9 8h6M9 12h6M9 16h3"></path></svg>
+            <div>
+              <h3>Na etiketi piše sve</h3>
+              <p>Svaki sastojak, način upotrebe, rok trajanja i broj serije.</p>
+            </div>
+          </div>
+          <div class="principle">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="6"></circle><path d="M9.5 10l1.8 1.8L14.8 8.3"></path><path d="M8.5 15l-1.5 6 5-2.5 5 2.5-1.5-6"></path></svg>
+            <div>
+              <h3>Svaki proizvod šaljem u laboratoriju</h3>
+              <p>Nijedan proizvod ne ide na sajt bez nalaza iz laboratorije.</p>
+            </div>
+          </div>
+        </div>
+        <div class="gallery">
+          <div class="ph">Fotografija: bašta, cijeli pogled</div>
+          <div class="ph">Fotografija: branje</div>
+          <div class="ph">Fotografija: sušenje bilja</div>
+          <div class="ph">Fotografija: ruke pri izradi masti</div>
+          <div class="ph">Fotografija: tegle sa etiketama</div>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn--outline" href="basta-i-izrada.html">Pogledajte baštu i proces izrade</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. DOKAZI -->
+    <section class="section">
+      <div class="container">
+        <span class="eyebrow">Utisci</span>
+        <h2>Ljudi koji su probali prve tegle</h2>
+        <div class="quotes quotes--2">
+          <figure class="quote">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 7H6v5h4v-1c0 2.5-1.5 4-4 5M19 7h-4v5h4v-1c0 2.5-1.5 4-4 5"></path></svg>
+            <blockquote>[Stvarna izjava nekoga ko proizvode koristi od početka. Najbolje radi kad kaže koliko dugo i koji proizvod.]</blockquote>
+            <figcaption>[Ime i prezime]<span>[Grad], kupuje od [GODINA]</span></figcaption>
+          </figure>
+          <figure class="quote">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 7H6v5h4v-1c0 2.5-1.5 4-4 5M19 7h-4v5h4v-1c0 2.5-1.5 4-4 5"></path></svg>
+            <blockquote>[Stvarna izjava kupca. Uz izjavu traži pisanu dozvolu za objavu imena.]</blockquote>
+            <figcaption>[Ime i prezime]<span>[Grad], kupuje od [GODINA]</span></figcaption>
+          </figure>
+        </div>
+        <div class="license">
+          <div class="ph license__doc">Sken licence</div>
+          <div>
+            <h3>Licenca i testiranje</h3>
+            <p class="muted">Licencu broj [BROJ LICENCE] izdala je [NAZIV INSTITUCIJE], [DATUM]. Proizvode testira [NAZIV LABORATORIJE].</p>
+            <a href="#">Pogledajte licencu i nalaze testiranja (PDF)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 + 10. PONUDA I POZIV NA AKCIJU -->
+    <section class="section section--tint">
+      <div class="container limit">
+        <blockquote class="pull">„Pravim ih isto kao za svoju porodicu. Zato ih mogu dati i Vama."</blockquote>
+        <div>
+          <p>U katalogu su čajevi, masti, tinkture, kreme i drugi proizvodi iz ove berbe. Kod svakog proizvoda piše sastav, odakle je biljka, cijena i koliko je komada ostalo.</p>
+          <p>Dodate ih u korpu, ja potvrdim narudžbu i šaljem paket. Plaćate pouzećem, kad paket stigne.</p>
+        </div>
+      </div>
+<div class="container"><div class="cta-row" style="justify-content: center; margin-top: 56px"><a class="btn" href="proizvodi.html">Pogledajte proizvode iz ove berbe</a></div></div>
+    </section>
+
+    <!-- 12. P.S. -->
+    <section class="ps">
+      <div class="container narrow">
+        <p><strong>P.S.</strong> Svaku seriju pravim od jedne berbe, pa kod svakog proizvoda piše koliko je komada ostalo. Ako imate pitanje prije narudžbe, pišite mi preko <a href="kontakt.html">stranice za kontakt</a>.</p>
+        <a class="btn" href="proizvodi.html">Izaberite proizvode iz ove berbe</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PODNOŽJE -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <a class="logo" href="index.html">[NAZIV BRENDA]</a>
+          <p style="margin-top: 16px;">Biljni preparati iz moje bašte, u malim serijama. [MJESTO].</p>
+          <p>Licenca broj [BROJ LICENCE]</p>
+        </div>
+        <div>
+          <h3>Sajt</h3>
+          <ul>
+            <li><a href="index.html">Početna</a></li>
+<li><a href="proizvodi.html">Proizvodi</a></li>
+            <li><a href="o-meni.html">O meni</a></li>
+            <li><a href="basta-i-izrada.html">Bašta i izrada</a></li>
+<li><a href="kontakt.html">Kontakt</a></li>
+<li><a href="korpa.html">Korpa</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Kontakt</h3>
+          <ul>
+            <li><a href="#">[BROJ TELEFONA]</a></li>
+            <li><a href="#">[EMAIL ADRESA]</a></li>
+            <li><a href="#">[INSTAGRAM]</a></li>
+            <li><a href="#">[FACEBOOK]</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__legal">
+        <p>Biljni preparati nisu lijek i ne zamjenjuju savjet ljekara. Ako uzimate terapiju, trudni ste ili dojite, pitajte ljekara prije upotrebe.</p>
+        <div><a href="#">Politika privatnosti</a> &nbsp;·&nbsp; <a href="#">Uslovi prodaje i dostave</a> &nbsp;·&nbsp; © [GODINA] [NAZIV BRENDA]</div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
