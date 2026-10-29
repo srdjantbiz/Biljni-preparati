@@ -406,6 +406,57 @@ h1, h2, h3 { color: var(--heading); }
   .logo__img { height: 60px; }
   .footer .logo__img { height: 112px; }
 }
+
+/* Fiksna navigacija */
+.header { position: sticky; top: 0; z-index: 50; background: var(--bg); }
+html { scroll-padding-top: 120px; }
+@media (max-width: 768px) { html { scroll-padding-top: 92px; } }
+
+/* Appear animacije za tekst i dugmad */
+@keyframes tgb-fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .hero .container > *, .page-head .container > * { animation: tgb-fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .hero .container > *:nth-child(2), .page-head .container > *:nth-child(2) { animation-delay: 0.12s; }
+  .hero .container > *:nth-child(3), .page-head .container > *:nth-child(3) { animation-delay: 0.24s; }
+  .hero .container > *:nth-child(4), .page-head .container > *:nth-child(4) { animation-delay: 0.36s; }
+  .hero .container > *:nth-child(5), .page-head .container > *:nth-child(5) { animation-delay: 0.48s; }
+  @supports (animation-timeline: view()) {
+    .product, .season, .quote, .card { overflow: clip; }
+    main :is(h2, h3, p, .eyebrow, .btn, blockquote, figcaption, .stock, .origin):not(.hero *):not(.page-head *):not(.pdetails__body *) {
+      animation: tgb-fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 70%;
+    }
+  }
+}
+
+/* Mikro animacije */
+.btn.is-added { background: var(--accent-hover); border-color: var(--accent-hover); }
+@keyframes tgb-bump { 0% { transform: scale(1); } 35% { transform: scale(1.35); } 100% { transform: scale(1); } }
+.cart__count.is-bump { animation: tgb-bump 0.45s cubic-bezier(0.3, 0.7, 0.3, 1.4); }
+@media (prefers-reduced-motion: no-preference) {
+  /* Detalji i česta pitanja: glatko otvaranje */
+  .pdetails, .faq details { interpolate-size: allow-keywords; }
+  .pdetails::details-content, .faq details::details-content { height: 0; overflow: clip; transition: height 0.35s ease, content-visibility 0.35s allow-discrete; }
+  .pdetails[open]::details-content, .faq details[open]::details-content { height: auto; }
+  .pdetails__plus, .faq__plus { transition: transform 0.3s ease; }
+  /* Kartice proizvoda pri prelasku mišem */
+  .product { transition: border-color 0.3s ease; }
+  .product:hover { border-color: var(--gold); }
+  .product .product__photo { transition: scale 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .product:hover .product__photo { scale: 1.03; }
+  /* Koraci: zlatna linija ispod broja */
+  .process__num::after { content: ""; display: block; width: 56px; height: 2px; margin-top: 14px; background: var(--gold); transform-origin: left center; }
+  /* Vremenska linija: zlatna linija preko svake godine */
+  .timeline li { position: relative; }
+  .timeline li::before { content: ""; position: absolute; left: 0; top: -1px; width: 100%; height: 1px; background: var(--gold); transform-origin: left center; transform: scaleX(0); }
+  @keyframes tgb-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @supports (animation-timeline: view()) {
+    .process__num::after { animation: tgb-draw linear both; animation-timeline: view(); animation-range: entry 20% cover 40%; }
+    .process__num, .timeline__when { animation: tgb-fade-up linear both; animation-timeline: view(); animation-range: entry 5% entry 70%; }
+    .timeline li::before { animation: tgb-draw linear both; animation-timeline: view(); animation-range: entry 10% cover 45%; }
+  }
+}
   </style>
 </head>
 <body>
@@ -616,6 +667,136 @@ h1, h2, h3 { color: var(--heading); }
     </div>
   </footer>
 
+
+<script>
+/* Mikro animacije: potvrda dodavanja u korpu i brojač komada u seriji */
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var count = document.querySelector('.cart__count');
+  var cart = document.querySelector('.cart');
+  var status = document.createElement('p');
+  status.className = 'sr-only'; status.setAttribute('role', 'status');
+  status.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);';
+  document.body.appendChild(status);
+
+  document.querySelectorAll('.product .btn:not(.btn--outline)').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.classList.contains('is-added')) return;
+      var label = btn.textContent;
+      btn.classList.add('is-added');
+      btn.textContent = 'Dodato u korpu ✓';
+      if (count) {
+        var n = (parseInt(count.textContent, 10) || 0) + 1;
+        count.textContent = n;
+        if (cart) cart.setAttribute('aria-label', 'Korpa, ' + n + ' proizvoda');
+        count.classList.remove('is-bump'); void count.offsetWidth; count.classList.add('is-bump');
+      }
+      var name = btn.closest('.product').querySelector('h3');
+      status.textContent = (name ? name.textContent.trim() : 'Proizvod') + ' je dodat u korpu.';
+      setTimeout(function () { btn.classList.remove('is-added'); btn.textContent = label; }, 1800);
+    });
+  });
+
+  if (reduce || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      var node = e.target.lastChild, m = node.nodeValue.match(/^(.*?)(\d+)(.*)$/);
+      if (!m) return;
+      var target = +m[2], from = Math.round(target * 1.4) + 5, t0 = null;
+      function step(t) {
+        if (!t0) t0 = t;
+        var k = Math.min((t - t0) / 700, 1), ease = 1 - Math.pow(1 - k, 3);
+        node.nodeValue = m[1] + Math.round(from + (target - from) * ease) + m[3];
+        if (k < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('.product .stock:not(.stock--out)').forEach(function (s) {
+    if (s.lastChild && s.lastChild.nodeType === 3 && /\d/.test(s.lastChild.nodeValue)) io.observe(s);
+  });
+})();
+
+/* Luk sa godinama (O meni) i horizontalni skrol koraka (Bašta i izrada) */
+(function () {
+  var HEADER = 105;
+  var mq = window.matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)');
+  function clamp(v) { return Math.min(Math.max(v, 0), 1); }
+  function pinned(sec, pin, extra, onProgress) {
+    var on = false, ticking = false;
+    function size() { sec.style.height = (pin.offsetHeight + extra()) + 'px'; }
+    function update() {
+      var total = sec.offsetHeight - pin.offsetHeight;
+      onProgress(total > 0 ? clamp((HEADER - sec.getBoundingClientRect().top) / total) : 0);
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; update(); }); } }
+    function onResize() { size(); update(); }
+    return function (enable, cls, reset) {
+      if (enable === on) return;
+      on = enable;
+      sec.classList.toggle(cls, enable);
+      if (enable) { size(); update(); window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onResize); }
+      else { sec.style.height = ''; reset(); window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onResize); }
+    };
+  }
+
+  var arc = document.querySelector('.arc-section');
+  if (arc) {
+    var lis = arc.querySelectorAll('.timeline li');
+    var items = [].map.call(lis, function (li) {
+      return { y: li.querySelector('.timeline__when').textContent.trim(), t: li.querySelector('h3').textContent, d: li.querySelector('p').textContent };
+    });
+    var n = items.length, nowY = new Date().getFullYear();
+    var nums = items.map(function (it) { return /^\d+$/.test(it.y) ? +it.y : nowY; });
+    var stage = arc.querySelector('.arc__stage'), dots = arc.querySelectorAll('.arc__dot'), yearEl = arc.querySelector('.arc__year');
+    var text = arc.querySelector('.arc__text'), title = arc.querySelector('.arc__title'), desc = arc.querySelector('.arc__desc'), count = arc.querySelector('.arc__count');
+    var bar = arc.querySelector('.arc__progress span'), active = 0, timer;
+    function show(i) {
+      if (i === active) return;
+      active = i;
+      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); });
+      text.classList.add('is-out');
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        title.textContent = items[i].t; desc.textContent = items[i].d; count.textContent = (i + 1) + ' od ' + n;
+        text.classList.remove('is-out');
+      }, 200);
+    }
+    var toggleArc = pinned(arc, arc.querySelector('.arc-pin'), function () { return (n - 1) * window.innerHeight * 0.45; }, function (p) {
+      var pos = p * (n - 1), i = Math.min(Math.floor(pos), n - 2), f = pos - i;
+      stage.style.setProperty('--rot', (-pos * 26) + 'deg');
+      var v = nums[i] + (nums[i + 1] - nums[i]) * f;
+      yearEl.textContent = (p > 0.985 && !/^\d+$/.test(items[n - 1].y)) ? items[n - 1].y : Math.round(v);
+      show(Math.round(pos));
+      bar.style.width = (p * 100) + '%';
+    });
+    arc.classList.remove('has-arc', 'arc-static');
+    toggleArc(mq.matches, 'has-arc', function () { stage.style.removeProperty('--rot'); });
+    mq.addEventListener('change', function (e) { toggleArc(e.matches, 'has-arc', function () { stage.style.removeProperty('--rot'); }); });
+  }
+
+  var hs = document.querySelector('.hs-section');
+  if (hs) {
+    var track = hs.querySelector('.process'), steps = track.children, cnt = hs.querySelector('.hs-count'), hbar = hs.querySelector('.hs-bar span');
+    var box = track.parentElement;
+    function dist() {
+      var cs = getComputedStyle(box);
+      return Math.max(0, track.scrollWidth - (box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)));
+    }
+    var toggleHs = pinned(hs, hs.querySelector('.hs-pin'), function () { return dist() * 0.75; }, function (p) {
+      track.style.transform = 'translateX(' + (-p * dist()) + 'px)';
+      var i = Math.min(steps.length - 1, Math.round(p * (steps.length - 1)));
+      cnt.textContent = 'Korak ' + (i + 1) + ' od ' + steps.length;
+      hbar.style.width = (p * 100) + '%';
+    });
+    var reset = function () { track.style.transform = ''; };
+    toggleHs(mq.matches, 'has-hscroll', reset);
+    mq.addEventListener('change', function (e) { toggleHs(e.matches, 'has-hscroll', reset); });
+  }
+})();
+</script>
 
 </body>
 </html>

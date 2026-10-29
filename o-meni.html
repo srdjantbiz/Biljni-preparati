@@ -448,6 +448,95 @@ img.ph-img.process__photo { aspect-ratio: 4 / 3; }
   img.ph-img.hero__photo { aspect-ratio: 4 / 3; }
   .gallery img.ph-img:first-child { grid-column: span 2; grid-row: auto; aspect-ratio: 4 / 3; }
 }
+
+/* Fiksna navigacija */
+.header { position: sticky; top: 0; z-index: 50; background: var(--bg); }
+html { scroll-padding-top: 120px; }
+@media (max-width: 768px) { html { scroll-padding-top: 92px; } }
+
+/* Parallax za pozadinske slike preko cijele sekcije */
+.hero--image { overflow: clip; }
+@keyframes tgb-parallax { from { transform: translateY(-12%); } to { transform: translateY(12%); } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero--image .hero__bg { top: -20%; bottom: auto; height: 140%; animation: tgb-parallax linear both; animation-timeline: view(); animation-range: cover; will-change: transform; }
+  }
+}
+
+/* Appear animacije za tekst i dugmad */
+@keyframes tgb-fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .hero .container > *, .page-head .container > * { animation: tgb-fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .hero .container > *:nth-child(2), .page-head .container > *:nth-child(2) { animation-delay: 0.12s; }
+  .hero .container > *:nth-child(3), .page-head .container > *:nth-child(3) { animation-delay: 0.24s; }
+  .hero .container > *:nth-child(4), .page-head .container > *:nth-child(4) { animation-delay: 0.36s; }
+  .hero .container > *:nth-child(5), .page-head .container > *:nth-child(5) { animation-delay: 0.48s; }
+  @supports (animation-timeline: view()) {
+    .product, .season, .quote, .card { overflow: clip; }
+    main :is(h2, h3, p, .eyebrow, .btn, blockquote, figcaption, .stock, .origin):not(.hero *):not(.page-head *):not(.pdetails__body *) {
+      animation: tgb-fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 70%;
+    }
+  }
+}
+
+/* Mikro animacije */
+.btn.is-added { background: var(--accent-hover); border-color: var(--accent-hover); }
+@keyframes tgb-bump { 0% { transform: scale(1); } 35% { transform: scale(1.35); } 100% { transform: scale(1); } }
+.cart__count.is-bump { animation: tgb-bump 0.45s cubic-bezier(0.3, 0.7, 0.3, 1.4); }
+@media (prefers-reduced-motion: no-preference) {
+  /* Detalji i česta pitanja: glatko otvaranje */
+  .pdetails, .faq details { interpolate-size: allow-keywords; }
+  .pdetails::details-content, .faq details::details-content { height: 0; overflow: clip; transition: height 0.35s ease, content-visibility 0.35s allow-discrete; }
+  .pdetails[open]::details-content, .faq details[open]::details-content { height: auto; }
+  .pdetails__plus, .faq__plus { transition: transform 0.3s ease; }
+  /* Kartice proizvoda pri prelasku mišem */
+  .product { transition: border-color 0.3s ease; }
+  .product:hover { border-color: var(--gold); }
+  .product .product__photo { transition: scale 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .product:hover .product__photo { scale: 1.03; }
+  /* Koraci: zlatna linija ispod broja */
+  .process__num::after { content: ""; display: block; width: 56px; height: 2px; margin-top: 14px; background: var(--gold); transform-origin: left center; }
+  /* Vremenska linija: zlatna linija preko svake godine */
+  .timeline li { position: relative; }
+  .timeline li::before { content: ""; position: absolute; left: 0; top: -1px; width: 100%; height: 1px; background: var(--gold); transform-origin: left center; transform: scaleX(0); }
+  @keyframes tgb-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @supports (animation-timeline: view()) {
+    .process__num::after { animation: tgb-draw linear both; animation-timeline: view(); animation-range: entry 20% cover 40%; }
+    .process__num, .timeline__when { animation: tgb-fade-up linear both; animation-timeline: view(); animation-range: entry 5% entry 70%; }
+    .timeline li::before { animation: tgb-draw linear both; animation-timeline: view(); animation-range: entry 10% cover 45%; }
+  }
+}
+
+/* Luk sa godinama (O meni) */
+.arc { display: none; }
+.arc-section.has-arc { padding: 0; position: relative; }
+.arc-section.has-arc .timeline { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); margin: 0; }
+.arc-section.has-arc .arc { display: block; margin-top: 16px; }
+.arc-section.has-arc .arc-pin { position: sticky; top: 105px; min-height: calc(100vh - 105px); display: flex; align-items: center; padding: 56px 0 40px; box-sizing: border-box; }
+.arc-section.has-arc .arc-pin > .container { width: 100%; }
+.arc-section.has-arc h2 { margin-bottom: 8px; }
+.arc__text { display: none; }
+.arc-section.has-arc .arc-top { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; }
+.arc-section.has-arc .arc__text { display: block; min-height: 150px; }
+.arc__count { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--secondary); }
+.arc__title { font-size: 30px; margin: 8px 0 12px; }
+.arc__desc { color: var(--muted); margin: 0; max-width: 46ch; }
+.arc-section .arc__text { transition: opacity 0.35s ease, transform 0.35s ease; }
+.arc__text.is-out { opacity: 0; transform: translateY(12px); }
+.arc__stage { position: relative; height: 340px; overflow: clip; --R: 460px; --step: 26deg; --rot: 0deg; }
+.arc__wheel { position: absolute; left: 50%; top: 56px; width: calc(var(--R) * 2); height: calc(var(--R) * 2); margin-left: calc(var(--R) * -1); border: 2px solid var(--gold); border-radius: 50%; transform: rotate(var(--rot)); }
+.arc__dot { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: rotate(calc(var(--i) * var(--step))) translateY(calc(var(--R) * -1)); }
+.arc__dot::before { content: ""; position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--gold); }
+.arc__dot.is-active::before { background: var(--gold); }
+.arc__label { position: absolute; left: 0; top: -44px; transform: translateX(-50%) rotate(calc((var(--i) * var(--step) + var(--rot)) * -1)); transform-origin: 50% 36px; font-family: var(--font-head); font-size: 20px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.arc__dot.is-active .arc__label { color: var(--heading); }
+.arc__year { position: absolute; left: 0; right: 0; top: 150px; text-align: center; font-family: var(--font-head); font-size: 128px; font-weight: 600; line-height: 1; color: var(--heading); font-variant-numeric: tabular-nums; }
+.arc__progress { position: absolute; left: 50%; bottom: 8px; width: 240px; margin-left: -120px; height: 2px; background: var(--line); }
+.arc-section.arc-static { padding: var(--section-y) 0; }
+.arc-section.arc-static .arc-pin { position: static; min-height: 0; padding: 0; }
+.arc__progress span { display: block; height: 100%; width: 0; background: var(--gold); }
   </style>
 </head>
 <body>
@@ -524,10 +613,14 @@ img.ph-img.process__photo { aspect-ratio: 4 / 3; }
     </section>
 
     
-    <section class="section">
+    <section class="section arc-section has-arc arc-static" id="godine">
+      <div class="arc-pin">
       <div class="container">
-        <span class="eyebrow">[X] godina, korak po korak</span>
-        <h2>Od jedne tegle do licence</h2>
+        <div class="arc-top">
+          <div class="arc-intro"><span class="eyebrow">30 godina, korak po korak</span>
+          <h2>Od jedne tegle do licence</h2></div>
+          <div class="arc__text" aria-hidden="true"><span class="arc__count">1 od 5</span><h3 class="arc__title">Za sebe i svoje ukućane</h3><p class="arc__desc">Prvi preparati. Bašta je tada bila [VELIČINA ILI BROJ GREDICA].</p></div>
+        </div>
         <ol class="timeline">
           <li>
             <span class="timeline__when">1996</span>
@@ -565,6 +658,20 @@ img.ph-img.process__photo { aspect-ratio: 4 / 3; }
             </div>
           </li>
         </ol>
+        <div class="arc" aria-hidden="true">
+          <div class="arc__stage">
+            <div class="arc__wheel">
+<span class="arc__dot is-active" style="--i: 0"><span class="arc__label">1996</span></span>
+<span class="arc__dot" style="--i: 1"><span class="arc__label">2003</span></span>
+<span class="arc__dot" style="--i: 2"><span class="arc__label">2005</span></span>
+<span class="arc__dot" style="--i: 3"><span class="arc__label">2006</span></span>
+<span class="arc__dot" style="--i: 4"><span class="arc__label">Danas</span></span>
+            </div>
+            <div class="arc__year">1996</div>
+            <div class="arc__progress"><span></span></div>
+          </div>
+        </div>
+      </div>
       </div>
     </section>
 
@@ -702,6 +809,136 @@ img.ph-img.process__photo { aspect-ratio: 4 / 3; }
     </div>
   </footer>
 
+
+<script>
+/* Mikro animacije: potvrda dodavanja u korpu i brojač komada u seriji */
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var count = document.querySelector('.cart__count');
+  var cart = document.querySelector('.cart');
+  var status = document.createElement('p');
+  status.className = 'sr-only'; status.setAttribute('role', 'status');
+  status.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);';
+  document.body.appendChild(status);
+
+  document.querySelectorAll('.product .btn:not(.btn--outline)').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.classList.contains('is-added')) return;
+      var label = btn.textContent;
+      btn.classList.add('is-added');
+      btn.textContent = 'Dodato u korpu ✓';
+      if (count) {
+        var n = (parseInt(count.textContent, 10) || 0) + 1;
+        count.textContent = n;
+        if (cart) cart.setAttribute('aria-label', 'Korpa, ' + n + ' proizvoda');
+        count.classList.remove('is-bump'); void count.offsetWidth; count.classList.add('is-bump');
+      }
+      var name = btn.closest('.product').querySelector('h3');
+      status.textContent = (name ? name.textContent.trim() : 'Proizvod') + ' je dodat u korpu.';
+      setTimeout(function () { btn.classList.remove('is-added'); btn.textContent = label; }, 1800);
+    });
+  });
+
+  if (reduce || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      var node = e.target.lastChild, m = node.nodeValue.match(/^(.*?)(\d+)(.*)$/);
+      if (!m) return;
+      var target = +m[2], from = Math.round(target * 1.4) + 5, t0 = null;
+      function step(t) {
+        if (!t0) t0 = t;
+        var k = Math.min((t - t0) / 700, 1), ease = 1 - Math.pow(1 - k, 3);
+        node.nodeValue = m[1] + Math.round(from + (target - from) * ease) + m[3];
+        if (k < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('.product .stock:not(.stock--out)').forEach(function (s) {
+    if (s.lastChild && s.lastChild.nodeType === 3 && /\d/.test(s.lastChild.nodeValue)) io.observe(s);
+  });
+})();
+
+/* Luk sa godinama (O meni) i horizontalni skrol koraka (Bašta i izrada) */
+(function () {
+  var HEADER = 105;
+  var mq = window.matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)');
+  function clamp(v) { return Math.min(Math.max(v, 0), 1); }
+  function pinned(sec, pin, extra, onProgress) {
+    var on = false, ticking = false;
+    function size() { sec.style.height = (pin.offsetHeight + extra()) + 'px'; }
+    function update() {
+      var total = sec.offsetHeight - pin.offsetHeight;
+      onProgress(total > 0 ? clamp((HEADER - sec.getBoundingClientRect().top) / total) : 0);
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; update(); }); } }
+    function onResize() { size(); update(); }
+    return function (enable, cls, reset) {
+      if (enable === on) return;
+      on = enable;
+      sec.classList.toggle(cls, enable);
+      if (enable) { size(); update(); window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onResize); }
+      else { sec.style.height = ''; reset(); window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onResize); }
+    };
+  }
+
+  var arc = document.querySelector('.arc-section');
+  if (arc) {
+    var lis = arc.querySelectorAll('.timeline li');
+    var items = [].map.call(lis, function (li) {
+      return { y: li.querySelector('.timeline__when').textContent.trim(), t: li.querySelector('h3').textContent, d: li.querySelector('p').textContent };
+    });
+    var n = items.length, nowY = new Date().getFullYear();
+    var nums = items.map(function (it) { return /^\d+$/.test(it.y) ? +it.y : nowY; });
+    var stage = arc.querySelector('.arc__stage'), dots = arc.querySelectorAll('.arc__dot'), yearEl = arc.querySelector('.arc__year');
+    var text = arc.querySelector('.arc__text'), title = arc.querySelector('.arc__title'), desc = arc.querySelector('.arc__desc'), count = arc.querySelector('.arc__count');
+    var bar = arc.querySelector('.arc__progress span'), active = 0, timer;
+    function show(i) {
+      if (i === active) return;
+      active = i;
+      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); });
+      text.classList.add('is-out');
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        title.textContent = items[i].t; desc.textContent = items[i].d; count.textContent = (i + 1) + ' od ' + n;
+        text.classList.remove('is-out');
+      }, 200);
+    }
+    var toggleArc = pinned(arc, arc.querySelector('.arc-pin'), function () { return (n - 1) * window.innerHeight * 0.45; }, function (p) {
+      var pos = p * (n - 1), i = Math.min(Math.floor(pos), n - 2), f = pos - i;
+      stage.style.setProperty('--rot', (-pos * 26) + 'deg');
+      var v = nums[i] + (nums[i + 1] - nums[i]) * f;
+      yearEl.textContent = (p > 0.985 && !/^\d+$/.test(items[n - 1].y)) ? items[n - 1].y : Math.round(v);
+      show(Math.round(pos));
+      bar.style.width = (p * 100) + '%';
+    });
+    arc.classList.remove('has-arc', 'arc-static');
+    toggleArc(mq.matches, 'has-arc', function () { stage.style.removeProperty('--rot'); });
+    mq.addEventListener('change', function (e) { toggleArc(e.matches, 'has-arc', function () { stage.style.removeProperty('--rot'); }); });
+  }
+
+  var hs = document.querySelector('.hs-section');
+  if (hs) {
+    var track = hs.querySelector('.process'), steps = track.children, cnt = hs.querySelector('.hs-count'), hbar = hs.querySelector('.hs-bar span');
+    var box = track.parentElement;
+    function dist() {
+      var cs = getComputedStyle(box);
+      return Math.max(0, track.scrollWidth - (box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)));
+    }
+    var toggleHs = pinned(hs, hs.querySelector('.hs-pin'), function () { return dist() * 0.75; }, function (p) {
+      track.style.transform = 'translateX(' + (-p * dist()) + 'px)';
+      var i = Math.min(steps.length - 1, Math.round(p * (steps.length - 1)));
+      cnt.textContent = 'Korak ' + (i + 1) + ' od ' + steps.length;
+      hbar.style.width = (p * 100) + '%';
+    });
+    var reset = function () { track.style.transform = ''; };
+    toggleHs(mq.matches, 'has-hscroll', reset);
+    mq.addEventListener('change', function (e) { toggleHs(e.matches, 'has-hscroll', reset); });
+  }
+})();
+</script>
 
 </body>
 </html>
