@@ -473,7 +473,7 @@ html { scroll-padding-top: 120px; }
   .hero .container > *:nth-child(5), .page-head .container > *:nth-child(5) { animation-delay: 0.48s; }
   @supports (animation-timeline: view()) {
     .product, .season, .quote, .card { overflow: clip; }
-    main :is(h2, h3, p, .eyebrow, .btn, blockquote, figcaption, .stock, .origin):not(.hero *):not(.page-head *):not(.pdetails__body *) {
+    html:not(.js-reveal) main :is(h2, h3, p, .eyebrow, .btn, blockquote, figcaption, .stock, .origin):not(.hero *):not(.page-head *):not(.pdetails__body *) {
       animation: tgb-fade-up linear both;
       animation-timeline: view();
       animation-range: entry 5% entry 70%;
@@ -537,7 +537,16 @@ html { scroll-padding-top: 120px; }
 .arc-section.arc-static { padding: var(--section-y) 0; }
 .arc-section.arc-static .arc-pin { position: static; min-height: 0; padding: 0; }
 .arc__progress span { display: block; height: 100%; width: 0; background: var(--gold); }
+
+/* Pojavljivanje sekcija pri skrolu (aktivira ga skripta klasom js-reveal) */
+@media (prefers-reduced-motion: no-preference) {
+  .js-reveal .rv { opacity: 0; transform: translateY(30px); transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--rd, 0s); }
+  .js-reveal .rv.is-in { opacity: 1; transform: none; }
+  .js-reveal .rv-img { clip-path: inset(100% 0 0 0); scale: 1.04; transition: clip-path 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), scale 1.2s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--rd, 0s); }
+  .js-reveal .rv-img.is-in { clip-path: inset(0 0 0 0); scale: 1; }
+}
   </style>
+  <script>if (window.IntersectionObserver && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');</script>
 </head>
 <body>
 
@@ -937,6 +946,44 @@ html { scroll-padding-top: 120px; }
     toggleHs(mq.matches, 'has-hscroll', reset);
     mq.addEventListener('change', function (e) { toggleHs(e.matches, 'has-hscroll', reset); });
   }
+})();
+
+/* Pojavljivanje sekcija pri skrolu */
+(function () {
+  var root = document.documentElement;
+  if (!root.classList.contains('js-reveal')) return;
+  var SKIP = '.hero, .page-head, .arc-section, .hs-section, .header, .footer';
+  var BLOCKS = 'h2, h3, .eyebrow, p, .btn, .product, .pillar, .quote, .steps > li, .benefits > li, .fact, .stat, .season, .principle, .faq details, .channel, .license, .catalog-note, .filters, .legend, .form, .contact-box, .item, .summary, .trust li, .stock-note, .after li, .pull, .cta-row, .gallery';
+  var IMGS = '.bleed__media, .gallery > img, .product__media, .season > img, .license__doc, .item__photo';
+  /* Slike se prate preko roditelja: dok su skrivene clip-pathom, posmatrač ih ne vidi. */
+  var groups = new Map();
+  function track(target, el) {
+    if (!groups.has(target)) groups.set(target, []);
+    groups.get(target).push(el);
+  }
+  document.querySelectorAll('main section').forEach(function (sec) {
+    if (sec.matches(SKIP)) return;
+    sec.querySelectorAll(BLOCKS).forEach(function (el) {
+      var parent = el.parentElement.closest(BLOCKS);
+      if (parent && sec.contains(parent)) return;
+      el.classList.add('rv'); track(el, el);
+    });
+    sec.querySelectorAll(IMGS).forEach(function (el) { el.classList.add('rv-img'); track(el.parentElement, el); });
+  });
+  var io = new IntersectionObserver(function (entries) {
+    var shown = [];
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      shown = shown.concat(groups.get(e.target) || []);
+      io.unobserve(e.target);
+    });
+    shown.sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
+    shown.forEach(function (el, i) {
+      el.style.setProperty('--rd', Math.min(i * 0.08, 0.48) + 's');
+      el.classList.add('is-in');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
+  groups.forEach(function (_, target) { io.observe(target); });
 })();
 </script>
 
